@@ -23,25 +23,12 @@ class Upload extends REST_Controller {
                 $config['upload_path']          = './assets/uploads/';
                 $config['allowed_types']        = '*';
                 $config['overwrite'] = TRUE;
-                // $config['file_name']            = $this ->file_name;
-                // $config['max_size']             = 100;
-                // $config['max_width']            = 1024;
-                // $config['max_height']           = 768;
-
               
                 $this->load->library('upload', $config);
                 
                 $userfile ='userfile';
-                
-                // $codeigniter_hashed = $this -> encrypt -> sha1( $userfile );
-                // var_dump ($codeigniter_hashed);
-               
-
                 if ( ! $this->upload->do_upload($userfile))
                 {
-                        // $error = array('error' => $this->upload->display_errors());
-
-                        // $this->load->view('upload_form', $error);
                         
                         $this->set_response([
                                'status' => FALSE,
@@ -50,9 +37,6 @@ class Upload extends REST_Controller {
                 }
                 else
                 {
-                        // $data = array('upload_data' => $this->upload->data());
-
-                        // $this->load->view('upload_success', $data);
                         $this->set_response([
                                'status' => TRUE,
                                'message'=> 'Success'

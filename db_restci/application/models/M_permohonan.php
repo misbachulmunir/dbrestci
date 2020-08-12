@@ -30,7 +30,8 @@ class M_Permohonan extends CI_Model
             if ($cek > 0) {
                 $no = date('Ymd') . '/PPID/' . date('Hmis') . '/' . rand(1000, 9990);
             }
-            var_dump($no);
+            $hash =md5(rand(1, 9999) + time());
+          
 			$data = array(
 				"no_permohonan" => $no,
 				"nik" => $nik,
@@ -50,7 +51,7 @@ class M_Permohonan extends CI_Model
                 "id_memperoleh_informasi" => $id_memperoleh_informasi,
                 "bentuk_informasi" => $bentuk_informasi,
                 "cdd" => date('Y-m-d H:i:s'),
-                "hash" => md5(rand(1, 9999) + time()),
+                "hash" => $hash
 			 );
 
 			$insert = $this -> db -> insert("t_permohonan",$data);
@@ -58,7 +59,8 @@ class M_Permohonan extends CI_Model
 			if ($insert) {
 				# code...
 				$response ['status']=200;
-				$response ['error']=false;
+                $response ['error']=false;
+                $response ['hash']=$hash;
 				$response ['message']="Data permohonan di tambahkan";
 				return $response;
 			}else{
@@ -67,7 +69,6 @@ class M_Permohonan extends CI_Model
 				$response ['message']="Data permohonan Gagal tambahkan";
 				return $response;
 			}
-		// }
     }
     public function get_last_no($id){
 		$this->db->select('no_permohonan');
@@ -75,6 +76,42 @@ class M_Permohonan extends CI_Model
 		$this->db->where('no_permohonan', $id);
 		$query = $this->db->get();
 		return $query->row();
+    }
+    
+   
+    //ambil satu data menurut no permohonan
+    public function getid($id){
+        return $this ->db ->get_where('t_permohonan',['hash'=>$id])->result_array();
+    }
+
+    //function update data
+	public function update_permohonan($id,$status){
+		if($id == ''){
+			return $this -> empty_response();
+		}else{
+			$where  = array("id" => $id );
+			$set  = array(
+				'status_lengkap' => $status,
+				 );
+
+			$this ->db -> where ($where);
+			$update = $this -> db -> update ("t_permohonan",$set);
+
+			if($update){
+				$response ['status']=200;
+				$response ['error']=false;
+				$response ['message']="Data permohonan berhasil di update";
+				return $response;
+			}else{
+				$response ['status']=502;
+				$response ['error']=true;
+				$response ['message']="Data permohonan gagal di update";
+				return $response;
+			}
+
+		}
+
 	}
+
 
 }
