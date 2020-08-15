@@ -55,7 +55,8 @@ class Permohonan extends REST_Controller{
          $f_akta = ($ambil['file_akta']);
          $f_pengesahan = ($ambil['file_pengesahan']);
          $f_suratketerangan = ($ambil['file_surat_keterangan']);
-
+        
+    
          //cek status
          if($idkategori==='1'){
            if($f_ktp === null){
@@ -64,13 +65,14 @@ class Permohonan extends REST_Controller{
                $status = "lengkap";
            }
          }elseif ($idkategori === '2') {
-            if($f_ktp === null | $f_ktp_surat_kuasa===null | $f_ktp_kuasa){
+        
+            if($f_ktp === null | $f_ktp_surat_kuasa===null | $f_ktp_kuasa === null){
                 $status = "tidak lengkap";
             }else{
                 $status = "lengkap";
             }    
          }elseif($idkategori ==='3'){
-             if($f_ktp === null | $f_ktp_surat_kuasa===null | $f_ktp_kuasa){
+             if($f_ktp === null | $f_ktp_surat_kuasa===null | $f_ktp_kuasa === null){
                 $status = "tidak lengkap";
              }else{
                 $status = "lengkap";
@@ -82,7 +84,7 @@ class Permohonan extends REST_Controller{
                 $status = "lengkap";
             }
          }elseif ($idkategori ==='5') {
-            if($f_ktp ===null|$f_ktp_surat_kuasa===null|$f_ktp_kuasa===null|$f_akta===null|$f_suratketerangan===null){
+            if($f_ktp === null|$f_ktp_surat_kuasa=== null|$f_ktp_kuasa===null|$f_akta===null|$f_suratketerangan===null){
                 $status ="tidak lengkap";
             }else {
                 $status = "lengkap";
@@ -109,7 +111,7 @@ class Permohonan extends REST_Controller{
      //update status
 	public function update_put(){
 		$response = $this -> M_permohonan-> update_permohonan(
-			$this -> put('id'),
+			$this -> put('id_permohonan'),
 			$this -> put('status_lengkap')
 		);
 		$this ->response($response);
@@ -183,25 +185,25 @@ class Permohonan extends REST_Controller{
                 $config['overwrite'] = TRUE;
               
                 $this->load->library('upload', $config);
-                
+              
                
-                if ( ! $this->upload->do_upload($userfile ))
+                if ($this->upload->do_upload($userfile ))
                 {
-                        
-                        $this->set_response([
-                               'status' => FALSE,
-                               'message' => 'Not Found',
-                                ], REST_Controller::HTTP_NOT_FOUND);
+
+                    $this->set_response([
+                        'status' => TRUE,
+                        'message'=> 'Success',
+                        'jenis' => $userfile,
+                        'path' => $pathnya,
+                        'filenaem'=>$filename
+                         ], REST_Controller::HTTP_OK);
                 }
                 else
                 {
-                        $this->set_response([
-                               'status' => TRUE,
-                               'message'=> 'Success',
-                               'jenis' => $userfile,
-                               'path' => $pathnya,
-                               'filenaem'=>$filename
-                                ], REST_Controller::HTTP_OK);
+                    $this->set_response([
+                        'status' => FALSE,
+                        'message' => 'Not Found',
+                         ], REST_Controller::HTTP_NOT_FOUND);
                      
                 }
         }

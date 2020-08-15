@@ -89,7 +89,7 @@ class M_Permohonan extends CI_Model
 		if($id == ''){
 			return $this -> empty_response();
 		}else{
-			$where  = array("id" => $id );
+			$where  = array("id_permohonan" => $id );
 			$set  = array(
 				'status_lengkap' => $status,
 				 );
